@@ -25,7 +25,8 @@ const els = {
   workbookSelect: document.getElementById("workbookSelect"),
   startQuestion: document.getElementById("startQuestion"),
   endQuestion: document.getElementById("endQuestion"),
-  startButton: document.getElementById("startButton"),
+  startRandomButton: document.getElementById("startRandomButton"),
+  startAscButton: document.getElementById("startAscButton"),
   progressText: document.getElementById("progressText"),
   questionImageWrap: document.getElementById("questionImageWrap"),
   questionImage: document.getElementById("questionImage"),
@@ -84,8 +85,11 @@ async function init() {
 }
 
 function bindEvents() {
-  if (els.startButton) {
-    els.startButton.addEventListener("click", () => startQuiz());
+  if (els.startRandomButton) {
+    els.startRandomButton.addEventListener("click", () => startQuiz("random"));
+  }
+  if (els.startAscButton) {
+    els.startAscButton.addEventListener("click", () => startQuiz("asc"));
   }
   if (els.answerTrue) {
     els.answerTrue.addEventListener("click", () => submitAnswer(true));
@@ -115,7 +119,7 @@ function renderWorkbookSelect() {
   }
 }
 
-async function startQuiz(overrideWorkbookId) {
+async function startQuiz(orderMode = "random", overrideWorkbookId) {
   const workbookId = Number(
     overrideWorkbookId ||
       (els.workbookSelect && els.workbookSelect.value) ||
@@ -143,11 +147,12 @@ async function startQuiz(overrideWorkbookId) {
       return;
     }
 
-    state.questions = filterQuestionsByRange(
+    const inRangeQuestions = filterQuestionsByRange(
       allQuestions,
       range.start,
       range.end,
     );
+    state.questions = applyQuestionOrder(inRangeQuestions, orderMode);
     state.nextBaseIndex = 0;
     state.currentItem = null;
     state.turn = 0;
@@ -197,6 +202,7 @@ function flattenQuestions(questions, workbookBaseUrl) {
       out.push({
         label: `${q.q_num}-${sub.q_sub}`,
         qNum: Number(q.q_num),
+        qSub: Number(sub.q_sub),
         text: sub.question || "",
         answer: Boolean(sub.answer),
         explain: sub.explain || "",
@@ -520,6 +526,28 @@ function filterQuestionsByRange(questions, start, end) {
     }
     return true;
   });
+}
+
+function applyQuestionOrder(questions, mode) {
+  const out = [...questions];
+  if (mode === "asc") {
+    out.sort((a, b) => {
+      if (a.qNum !== b.qNum) {
+        return a.qNum - b.qNum;
+      }
+      return a.qSub - b.qSub;
+    });
+    return out;
+  }
+  shuffleInPlace(out);
+  return out;
+}
+
+function shuffleInPlace(items) {
+  for (let i = items.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
 }
 
 function formatRangeText(start, end) {

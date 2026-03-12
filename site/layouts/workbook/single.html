@@ -9,19 +9,28 @@
 
     <div class="quiz-panel" id="setupPanel">
 
+      <p class="quiz-hint">データの q_num 値を使って出題の設定ができます。</p>
+
+      <h3>出題範囲</h3>
+
+      <p class="quiz-hint">未指定時は全範囲になります。</p>
+
       <div class="quiz-range">
-          <p class="quiz-hint">出題範囲を q_num の値を使って指定できます。<br>
-            未指定時は全範囲になります。</p>
-        <label class="quiz-label" for="startQuestion">開始番号：</label>
-        <input id="startQuestion" type="number" min="1" inputmode="numeric" />
+        <label class="quiz-label" for="startQuestion">開始番号：
+          <input id="startQuestion" type="number" min="1" inputmode="numeric" />
+        </label>
       </div>
 
       <div class="quiz-range">
-        <label class="quiz-label" for="endQuestion">終了番号：</label>
-        <input id="endQuestion" type="number" min="1" inputmode="numeric" />
+        <label class="quiz-label" for="endQuestion">終了番号：
+          <input id="endQuestion" type="number" min="1" inputmode="numeric" />
+        </label>
       </div>
 
-      <button id="startButton" class="underline" type="button">この範囲で開始</button>
+      <button id="startRandomButton" class="underline" type="button">
+          ランダム順で開始
+      </button>
+      <button id="startAscButton" class="underline" type="button">昇順で開始</button>
     </div>
 
     <div class="quiz-panel hidden" id="playPanel">
