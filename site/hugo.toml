@@ -6,10 +6,15 @@ copyright = "Copyright (c) 2026, rayfiyo"
 
 [[menu.main]]
 weight = 1
+name = "ホーム"
+url = "/"
+
+[[menu.main]]
+weight = 2
 name = "一覧（投稿）"
 url = "/post/"
 
 [[menu.main]]
-weight = 2
+weight = 3
 name = "GitHub Repository"
 url = "https://github.com/rayfiyo/driving-license-quiz"
