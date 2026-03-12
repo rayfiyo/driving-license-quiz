@@ -11,7 +11,7 @@ url = "/"
 
 [[menu.main]]
 weight = 2
-name = "一覧（投稿）"
+name = "問答一覧"
 url = "/post/"
 
 [[menu.main]]

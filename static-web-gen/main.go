@@ -40,19 +40,21 @@ type workbookIndex struct {
 func main() {
 	datasetDir := flag.String("dataset", "../dataset", "path to dataset directory")
 	outDir := flag.String("out", "../site/static/quiz-data", "path to Hugo static data directory")
-	contentDir := flag.String("content", "../site/content/workbook", "path to Hugo workbook content directory")
+	workbookContentDir := flag.String("content", "../site/content/workbook", "path to Hugo workbook content directory")
+	postContentDir := flag.String("post-content", "../site/content/post", "path to Hugo post content directory")
 	flag.Parse()
 
-	if err := build(*datasetDir, *outDir, *contentDir); err != nil {
+	if err := build(*datasetDir, *outDir, *workbookContentDir, *postContentDir); err != nil {
 		fmt.Fprintf(os.Stderr, "build failed: %v\n", err)
 		os.Exit(1)
 	}
 
 	fmt.Printf("generated quiz data: %s\n", *outDir)
-	fmt.Printf("generated quiz pages: %s\n", *contentDir)
+	fmt.Printf("generated workbook pages: %s\n", *workbookContentDir)
+	fmt.Printf("generated post pages: %s\n", *postContentDir)
 }
 
-func build(datasetDir, outDir, contentDir string) error {
+func build(datasetDir, outDir, workbookContentDir, postContentDir string) error {
 	matches, err := filepath.Glob(filepath.Join(datasetDir, "workbook-*.json"))
 	if err != nil {
 		return fmt.Errorf("glob dataset: %w", err)
@@ -69,8 +71,11 @@ func build(datasetDir, outDir, contentDir string) error {
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
 	}
-	if err := os.MkdirAll(contentDir, 0o755); err != nil {
-		return fmt.Errorf("create content dir: %w", err)
+	if err := os.MkdirAll(workbookContentDir, 0o755); err != nil {
+		return fmt.Errorf("create workbook content dir: %w", err)
+	}
+	if err := os.MkdirAll(postContentDir, 0o755); err != nil {
+		return fmt.Errorf("create post content dir: %w", err)
 	}
 
 	index := workbookIndex{GeneratedAt: time.Now().UTC().Format(time.RFC3339)}
@@ -107,20 +112,11 @@ func build(datasetDir, outDir, contentDir string) error {
 		})
 
 		pageName := fmt.Sprintf("workbook-%d.md", wb.Workbook)
-		pagePath := filepath.Join(contentDir, pageName)
-		pageBody := fmt.Sprintf(
-			"+++\n"+
-				"title = \"Workbook %d\"\n"+
-				"date = \"2026-03-11T00:00:00+09:00\"\n"+
-				"draft = false\n"+
-				"type = \"workbook\"\n"+
-				"workbook = %d\n"+
-				"+++\n",
-			wb.Workbook,
-			wb.Workbook,
-		)
-		if err := os.WriteFile(pagePath, []byte(pageBody), 0o644); err != nil {
-			return fmt.Errorf("write %s: %w", pagePath, err)
+		if err := writeWorkbookPage(workbookContentDir, pageName, wb.Workbook); err != nil {
+			return err
+		}
+		if err := writePostPage(postContentDir, pageName, wb.Workbook); err != nil {
+			return err
 		}
 	}
 
@@ -137,6 +133,43 @@ func build(datasetDir, outDir, contentDir string) error {
 	indexPath := filepath.Join(outDir, "index.json")
 	if err := os.WriteFile(indexPath, indexBody, 0o644); err != nil {
 		return fmt.Errorf("write %s: %w", indexPath, err)
+	}
+	return nil
+}
+
+func writeWorkbookPage(dir, pageName string, workbook int) error {
+	pagePath := filepath.Join(dir, pageName)
+	pageBody := fmt.Sprintf(
+		"+++\n"+
+			"title = \"Workbook %d\"\n"+
+			"date = \"2026-03-11T00:00:00+09:00\"\n"+
+			"draft = false\n"+
+			"type = \"workbook\"\n"+
+			"workbook = %d\n"+
+			"+++\n",
+		workbook,
+		workbook,
+	)
+	if err := os.WriteFile(pagePath, []byte(pageBody), 0o644); err != nil {
+		return fmt.Errorf("write %s: %w", pagePath, err)
+	}
+	return nil
+}
+
+func writePostPage(dir, pageName string, workbook int) error {
+	pagePath := filepath.Join(dir, pageName)
+	pageBody := fmt.Sprintf(
+		"+++\n"+
+			"title = \"Workbook %d 解答一覧\"\n"+
+			"date = \"2026-03-11T00:00:00+09:00\"\n"+
+			"draft = false\n"+
+			"workbook = %d\n"+
+			"+++\n",
+		workbook,
+		workbook,
+	)
+	if err := os.WriteFile(pagePath, []byte(pageBody), 0o644); err != nil {
+		return fmt.Errorf("write %s: %w", pagePath, err)
 	}
 	return nil
 }

@@ -1,0 +1,53 @@
+{{- define "main" -}}
+<article>
+  <header class="mb-10">
+    <h1 class="my-0! pb-2.5">{{ .Title }}</h1>
+    <p class="m-0 opacity-80">問題・回答・解説の一覧</p>
+  </header>
+
+  {{- $workbook := .Params.workbook -}}
+  {{- if not $workbook -}}
+  <p>workbook パラメータが設定されていません。</p>
+  {{- else -}}
+  {{- $jsonPath := printf "static/quiz-data/workbook-%d.json" (int $workbook) -}}
+  {{- if not (fileExists $jsonPath) -}}
+  <p>{{ printf "%s が見つかりません。" $jsonPath }}</p>
+  {{- else -}}
+  {{- $data := (readFile $jsonPath | transform.Unmarshal) -}}
+  {{- $questions := index $data "questions" -}}
+  {{- range $q := $questions -}}
+  <section class="my-10 first-of-type:mt-0">
+    <h2 class="my-0! pb-2">Q{{ index $q "q_num" }}</h2>
+
+    {{- $prompt := index $q "prompt" -}}
+    {{- if $prompt -}}
+    <p class="opacity-80">{{ $prompt }}</p>
+    {{- end -}}
+
+    {{- $imagePath := index $q "image_path" -}}
+    {{- if $imagePath -}}
+    <div class="my-4">
+      <img
+        src="{{ (printf "quiz-data/%s" $imagePath) | relURL }}"
+        alt="{{ printf "Workbook %d Q%v" (int $workbook) (index $q "q_num") }}"
+        loading="lazy"
+      />
+    </div>
+    {{- end -}}
+
+    {{- range $sub := index $q "subs" -}}
+    <div class="my-4">
+      <p class="my-1">
+        <strong>{{ index $q "q_num" }}-{{ index $sub "q_sub" }}</strong>
+        {{ index $sub "question" }}
+      </p>
+      <p class="my-1">回答: {{ if index $sub "answer" }}◯{{ else }}✕{{ end }}</p>
+      <p class="my-1">解説: {{ index $sub "explain" }}</p>
+    </div>
+    {{- end -}}
+  </section>
+  {{- end -}}
+  {{- end -}}
+  {{- end -}}
+</article>
+{{- end -}}
