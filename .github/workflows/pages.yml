@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
   pages: write
@@ -34,6 +37,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: static-web-gen/go.mod
+          cache: false
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -56,6 +60,8 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
