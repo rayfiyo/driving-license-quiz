@@ -14,8 +14,8 @@ const state = {
   autoWorkbook: null,
 };
 
-const REVIEW_TARGET_STREAK = 2;
-const REVIEW_INTERVALS = [2, 5];
+const REVIEW_INITIAL_CORRECT_TARGET = 2;
+const REVIEW_STAGE_GAPS = [3, 6];
 
 const els = {
   quizStatus: document.getElementById("quizStatus"),
@@ -444,10 +444,6 @@ function findReviewItem(idx) {
   return state.reviewItems.find((item) => item.idx === idx) || null;
 }
 
-function scheduleNextInterval(streak) {
-  return REVIEW_INTERVALS[Math.min(streak, REVIEW_INTERVALS.length - 1)];
-}
-
 function updateReviewByResult(idx, ok, fromNormal) {
   let item = findReviewItem(idx);
 
@@ -459,6 +455,7 @@ function updateReviewByResult(idx, ok, fromNormal) {
     item = {
       idx,
       streak: 0,
+      phase: 0,
       dueTurn: state.turn + 1,
       mastered: false,
     };
@@ -466,18 +463,32 @@ function updateReviewByResult(idx, ok, fromNormal) {
   }
 
   if (ok) {
-    item.streak += 1;
-    if (item.streak >= REVIEW_TARGET_STREAK) {
-      item.mastered = true;
+    if (item.phase === 0) {
+      item.streak += 1;
+      if (item.streak < REVIEW_INITIAL_CORRECT_TARGET) {
+        item.dueTurn = state.turn + 1;
+        return;
+      }
+      item.phase = 1;
+      item.dueTurn = state.turn + REVIEW_STAGE_GAPS[0] + 1;
       return;
     }
-    item.dueTurn = state.turn + scheduleNextInterval(item.streak);
+
+    if (item.phase === 1) {
+      item.phase = 2;
+      item.dueTurn = state.turn + REVIEW_STAGE_GAPS[1] + 1;
+      return;
+    }
+
+    item.mastered = true;
     return;
   }
 
+  // 途中で誤答した場合は段階をやり直す。
   item.streak = 0;
+  item.phase = 0;
   item.mastered = false;
-  item.dueTurn = state.turn + (fromNormal ? REVIEW_INTERVALS[0] : 1);
+  item.dueTurn = state.turn + 1;
 }
 
 function parseQuestionRange() {
