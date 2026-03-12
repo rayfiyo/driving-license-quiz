@@ -208,7 +208,11 @@ function flattenQuestions(questions, workbookBaseUrl) {
 }
 
 function resolveQuestionImageURL(question, workbookBaseUrl) {
-  if (question && typeof question.image_path === "string" && question.image_path) {
+  if (
+    question &&
+    typeof question.image_path === "string" &&
+    question.image_path
+  ) {
     try {
       return new URL(question.image_path, workbookBaseUrl).toString();
     } catch (err) {
