@@ -1,0 +1,19 @@
+{{- define "main" -}}
+<article>
+  <header class="mb-10">
+    <h1 class="my-0! pb-2.5">Workbook</h1>
+    <p class="m-0 opacity-80">解きたい Workbook を選択</p>
+  </header>
+
+  <section class="quiz-list underline">
+    {{- $pages := where site.RegularPages "Section" "workbook" -}}
+    {{- $pages = where $pages "Params.workbook" "ne" nil -}}
+    {{- $pages = sort $pages "Params.workbook" -}}
+    {{- range $pages -}}
+    <a class="quiz-link" href="{{ .RelPermalink }}">Workbook {{ .Params.workbook }}</a>
+    {{- end -}}
+  </section>
+</article>
+
+<link rel="stylesheet" href="{{ "quiz/quiz.css" | relURL }}" />
+{{- end -}}

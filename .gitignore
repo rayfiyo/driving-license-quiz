@@ -45,3 +45,7 @@ tmp/
 cookies.*
 
 # --- --- --- プロジェクト毎の設定 --- --- --- #
+# GitHub Pages build artifacts
+/.pages/
+site/public/
+site/.hugo_build.lock

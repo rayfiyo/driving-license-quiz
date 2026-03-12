@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>運転免許 問題演習</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1
+          id="titleTop"
+          role="button"
+          tabindex="0"
+          aria-label="ページトップへ戻る"
+        >
+          運転免許 問題演習
+        </h1>
+        <p id="status">Workbook を読み込み中...</p>
+      </header>
+
+      <section class="panel" id="setupPanel">
+        <h2>Workbook を選択</h2>
+        <p>- Workbook 1 ~ 6: 仮免想定</p>
+        <p>- Workbook 7 ~ 12: 本免想定</p>
+        <p>- Workbook 13 ~ 16: 二種免許想定</p>
+        <label class="field" for="workbookSelect"></label>
+        <select id="workbookSelect"></select>
+
+        <div class="options">
+          <label class="option-row" for="reviewMode">
+            <input id="reviewMode" type="checkbox" />
+            間違った問題を復習する
+          </label>
+
+          <label class="field" for="masteryCount">連続正解回数</label>
+          <input id="masteryCount" type="number" min="1" max="5" value="2" />
+          <p class="hint">復習モード時のみ有効。2〜3 がおすすめです。</p>
+        </div>
+
+        <button id="startButton" type="button">問題開始</button>
+      </section>
+
+      <section class="panel hidden" id="quizPanel">
+        <div class="progress" id="progressText"></div>
+        <p class="prompt hidden" id="promptText"></p>
+        <div class="question-image-wrap hidden" id="questionImageWrap">
+          <img class="question-image" id="questionImage" alt="問題画像" loading="lazy" />
+        </div>
+        <p class="question" id="questionText"></p>
+
+        <div class="answers">
+          <button id="answerTrue" type="button" class="answer-btn true">
+            ◯
+          </button>
+          <button id="answerFalse" type="button" class="answer-btn false">
+            ✕
+          </button>
+        </div>
+
+        <div class="result hidden" id="resultArea">
+          <p id="resultText"></p>
+          <p class="explain" id="explainText"></p>
+          <button id="nextButton" type="button">次の問題へ</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="finishPanel">
+        <h2>終了</h2>
+        <p id="scoreText"></p>
+        <h3 id="answerListTitle" class="hidden">正誤一覧</h3>
+        <ul id="answerList" class="answer-list hidden"></ul>
+        <button id="restartButton" type="button">Workbook 選択に戻る</button>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

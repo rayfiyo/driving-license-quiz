@@ -1,0 +1,23 @@
+{{- define "main" -}}
+
+{{- $pages := .RegularPages -}}
+{{- $workbookPages := where $pages "Params.workbook" "ne" nil -}}
+{{- if eq (len $pages) (len $workbookPages) -}}
+{{- $pages = sort $workbookPages "Params.workbook" "asc" -}}
+{{- else -}}
+{{- $pages = sort $pages "Date" "desc" -}}
+{{- end -}}
+
+{{- range $pages -}}
+<section class="relative my-10 first-of-type:mt-0 last-of-type:mb-0">
+  <h2 class="my-0!">{{- .Title -}}</h2>
+  <time class="text-xs antialiased opacity-60"
+    >{{- .Date | time.Format ":date_medium" -}}</time
+  >
+  <a class="absolute inset-0 text-[0px]" href="{{- .Permalink -}}"
+    >{{- .Title -}}</a
+  >
+</section>
+{{- end -}}
+
+{{- end -}}

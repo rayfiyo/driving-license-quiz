@@ -1,0 +1,61 @@
+{{- define "main" -}}
+<article>
+  <header class="mb-10">
+    <h2 class="my-0! pb-2.5">{{ .Title }}</h2>
+  </header>
+
+  <section class="quiz-app not-prose" id="quizApp">
+    <p class="quiz-status" id="quizStatus">問題データを読み込み中...</p>
+
+    <div class="quiz-panel" id="setupPanel">
+
+      <div class="quiz-range">
+          <p class="quiz-hint">出題範囲を指定（未指定時は全範囲）：</p>
+        <label class="quiz-label" for="startQuestion">開始番号 (q_num)</label>
+        <input id="startQuestion" type="number" min="1" inputmode="numeric" />
+      </div>
+
+      <div class="quiz-range">
+        <label class="quiz-label" for="endQuestion">終了番号 (q_num)</label>
+        <input id="endQuestion" type="number" min="1" inputmode="numeric" />
+      </div>
+
+      <button id="startButton" class="underline" type="button">この範囲で開始</button>
+    </div>
+
+    <div class="quiz-panel hidden" id="playPanel">
+      <p class="quiz-progress" id="progressText"></p>
+      <div class="quiz-image-wrap hidden" id="questionImageWrap">
+        <img class="quiz-image" id="questionImage" alt="問題画像" loading="lazy" />
+      </div>
+      <p class="quiz-question" id="questionText"></p>
+
+      <div class="quiz-actions">
+        <button id="answerTrue" type="button">◯</button>
+        <button id="answerFalse" type="button">✕</button>
+      </div>
+
+      <div class="quiz-result hidden" id="resultArea">
+        <p class="quiz-result-text" id="resultText"></p>
+        <button id="nextButton" class="underline" type="button">次の問題へ</button>
+        <p class="quiz-explain" id="explainText"></p>
+      </div>
+    </div>
+
+    <div class="quiz-panel hidden" id="finishPanel">
+      <h2>結果</h2>
+      <p id="scoreText"></p>
+      <h3 class="quiz-missed-title hidden" id="missedTitle">一度でも間違った問題</h3>
+      <ul class="quiz-missed-list hidden" id="missedList"></ul>
+      <button id="restartButton" class="underline" type="button">もう一度挑戦する</button>
+    </div>
+  </section>
+</article>
+
+<link rel="stylesheet" href="{{ "quiz/quiz.css" | relURL }}" />
+<script>
+  window.QUIZ_INDEX_URL = "{{ "quiz-data/index.json" | relURL }}";
+  window.QUIZ_WORKBOOK = {{ .Params.workbook }};
+</script>
+<script src="{{ "quiz/quiz.js" | relURL }}" defer></script>
+{{- end -}}

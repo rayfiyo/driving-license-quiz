@@ -1,0 +1,10 @@
+baseURL = "https://rayfiyo.github.io/driving-license-quiz/"
+languageCode = "ja-jp"
+title = "運転免許 問題演習"
+theme = "paper"
+copyright = "Copyright (c) 2026, rayfiyo"
+
+[[menu.main]]
+weight = 1
+name = "一覧（投稿）"
+url = "/post/"
