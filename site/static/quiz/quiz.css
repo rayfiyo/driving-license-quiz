@@ -44,11 +44,9 @@
 }
 
 .quiz-range input {
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  padding: 0.55rem 0.65rem;
   background: transparent;
-  font-size: 1rem;
+  font-size: 1.2rem !important;
+  width: 50%;
 }
 
 .quiz-hint {
@@ -89,7 +87,7 @@
 }
 
 .quiz-actions button {
-  border: 1px solid rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(-1, 0, 0, 0.4) !important;
   border-radius: 6px !important;
 }
 
@@ -98,8 +96,6 @@
 .quiz-result button {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.06);
-  padding: 0.55rem 0.95rem;
-  font-size: 1rem;
 }
 
 .quiz-actions button {
