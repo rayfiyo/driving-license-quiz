@@ -17,7 +17,6 @@ type workbookFile struct {
 
 type question struct {
 	QNum      int           `json:"q_num"`
-	ImageURL  string        `json:"image_url,omitempty"`
 	ImagePath string        `json:"image_path,omitempty"`
 	Subs      []subQuestion `json:"subs"`
 }

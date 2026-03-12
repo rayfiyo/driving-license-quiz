@@ -218,9 +218,6 @@ function resolveQuestionImageURL(question, workbookBaseUrl) {
       console.error("invalid image_path:", question.image_path, err);
     }
   }
-  if (question && typeof question.image_url === "string" && question.image_url) {
-    return question.image_url;
-  }
   return "";
 }
 
