@@ -49,3 +49,11 @@ cookies.*
 /.pages/
 site/public/
 site/.hugo_build.lock
+site/static/quiz-data/
+site/content/workbook/workbook-*.md
+
+# private dataset checkout for local workflow simulation
+/.musasi2json/
+
+# local dataset (source of truth is private musasi2json repo)
+/dataset/

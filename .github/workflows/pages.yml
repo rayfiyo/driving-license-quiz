@@ -19,8 +19,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout driving-license-quiz
         uses: actions/checkout@v4
+
+      - name: Checkout musasi2json (private)
+        uses: actions/checkout@v4
+        with:
+          repository: rayfiyo/musasi2json
+          ref: main
+          token: ${{ secrets.MUSASI2JSON_READ_TOKEN }}
+          path: .musasi2json
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -36,7 +44,7 @@ jobs:
       - name: Generate quiz data and workbook pages
         run: |
           cd static-web-gen
-          go run .
+          go run . -dataset ../.musasi2json/dataset
 
       - name: Build Hugo site
         working-directory: site
