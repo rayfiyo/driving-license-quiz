@@ -2,16 +2,37 @@
 <article>
   <header class="mb-10">
     <h1 class="my-0! pb-2.5">Workbook</h1>
-    <p class="m-0 opacity-80">解きたい Workbook を選択</p>
+    <p class="m-0 opacity-80">解きたい Workbook を選択して下さい。</p>
   </header>
 
-  <section class="quiz-list underline">
-    {{- $pages := where site.RegularPages "Section" "workbook" -}}
-    {{- $pages = where $pages "Params.workbook" "ne" nil -}}
-    {{- $pages = sort $pages "Params.workbook" -}}
-    {{- range $pages -}}
-    <a class="quiz-link" href="{{ .RelPermalink }}">Workbook {{ .Params.workbook }}</a>
-    {{- end -}}
+  {{- $pages := where site.RegularPages "Section" "workbook" -}}
+  {{- $pages = where $pages "Params.workbook" "ne" nil -}}
+  {{- $pages = sort $pages "Params.workbook" -}}
+  {{- $pre := where (where $pages "Params.workbook" "ge" 1) "Params.workbook" "le" 6 -}}
+  {{- $graduation := where (where $pages "Params.workbook" "ge" 7) "Params.workbook" "le" 12 -}}
+  {{- $other := where $pages "Params.workbook" "gt" 12 -}}
+
+  <section>
+    <h2>仮免前</h2>
+    <div class="quiz-list underline">
+      {{- range $pre -}}
+      <a class="quiz-link" href="{{ .RelPermalink }}">Workbook {{ .Params.workbook }}</a>
+      {{- end -}}
+    </div>
+
+    <h2>卒検前</h2>
+    <div class="quiz-list underline">
+      {{- range $graduation -}}
+      <a class="quiz-link" href="{{ .RelPermalink }}">Workbook {{ .Params.workbook }}</a>
+      {{- end -}}
+    </div>
+
+    <h2>その他（二種免許など）</h2>
+    <div class="quiz-list underline">
+      {{- range $other -}}
+      <a class="quiz-link" href="{{ .RelPermalink }}">Workbook {{ .Params.workbook }}</a>
+      {{- end -}}
+    </div>
   </section>
 </article>
 
