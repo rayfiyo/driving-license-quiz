@@ -8,9 +8,10 @@
 `static-web-gen` ディレクトリで実行してください。
 
 ```bash
-go run ./cmd/build-pages
+go run . -dataset ../dataset
 ```
 
+`-dataset` は省略可能です（省略時は `../dataset`）。
 既定の生成先は `../site/static/quiz-data/` です。
 ページ生成先は `../site/content/workbook/` です。
 
@@ -24,7 +25,7 @@ go run ./cmd/build-pages
 ## オプション
 
 ```bash
-go run ./cmd/build-pages \
+go run . \
   -dataset ../dataset \
   -out ../site/static/quiz-data \
   -content ../site/content/workbook

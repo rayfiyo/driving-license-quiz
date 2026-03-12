@@ -36,7 +36,7 @@ jobs:
       - name: Generate quiz data and workbook pages
         run: |
           cd static-web-gen
-          go run ./cmd/build-pages
+          go run .
 
       - name: Build Hugo site
         working-directory: site
