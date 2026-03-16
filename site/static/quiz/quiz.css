@@ -66,6 +66,14 @@
   line-height: 1.7;
 }
 
+.quiz-prompt {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.03);
+  line-height: 1.6;
+}
+
 .quiz-image-wrap {
   margin: 0;
   display: flex;

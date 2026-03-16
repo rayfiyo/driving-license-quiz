@@ -30,6 +30,7 @@ const els = {
   progressText: document.getElementById("progressText"),
   questionImageWrap: document.getElementById("questionImageWrap"),
   questionImage: document.getElementById("questionImage"),
+  questionPrompt: document.getElementById("questionPrompt"),
   questionText: document.getElementById("questionText"),
   answerTrue: document.getElementById("answerTrue"),
   answerFalse: document.getElementById("answerFalse"),
@@ -203,6 +204,10 @@ function flattenQuestions(questions, workbookBaseUrl) {
         label: `${q.q_num}-${sub.q_sub}`,
         qNum: Number(q.q_num),
         qSub: Number(sub.q_sub),
+        prompt:
+          typeof q.prompt === "string" && q.prompt.trim() !== ""
+            ? q.prompt.trim()
+            : "",
         text: sub.question || "",
         answer: Boolean(sub.answer),
         explain: sub.explain || "",
@@ -244,6 +249,15 @@ function renderCurrentQuestion() {
     ` | 復習待ち ${reviewRemaining} 問` +
     ` | 範囲: ${rangeText}`;
   // ` | 解答 ${state.attemptCount + 1} 回目`
+  if (els.questionPrompt) {
+    if (q.prompt) {
+      els.questionPrompt.textContent = q.prompt;
+      els.questionPrompt.classList.remove("hidden");
+    } else {
+      els.questionPrompt.textContent = "";
+      els.questionPrompt.classList.add("hidden");
+    }
+  }
   els.questionText.textContent = q.text;
   if (els.questionImageWrap && els.questionImage) {
     if (q.imageUrl) {
@@ -540,17 +554,32 @@ function filterQuestionsByRange(questions, start, end) {
 }
 
 function applyQuestionOrder(questions, mode) {
-  const out = [...questions];
+  const groupedQuestions = groupQuestionsByQNum(questions);
   if (mode === "asc") {
-    out.sort((a, b) => {
-      if (a.qNum !== b.qNum) {
-        return a.qNum - b.qNum;
-      }
-      return a.qSub - b.qSub;
-    });
-    return out;
+    groupedQuestions.sort((a, b) => a[0].qNum - b[0].qNum);
+    return groupedQuestions.flat();
   }
-  shuffleInPlace(out);
+  shuffleInPlace(groupedQuestions);
+  return groupedQuestions.flat();
+}
+
+function groupQuestionsByQNum(questions) {
+  const groups = new Map();
+  for (const question of questions) {
+    const qNum = question.qNum;
+    if (!groups.has(qNum)) {
+      groups.set(qNum, []);
+    }
+    groups.get(qNum).push(question);
+  }
+
+  const out = [];
+  const sortedQNums = [...groups.keys()].sort((a, b) => a - b);
+  for (const qNum of sortedQNums) {
+    const group = groups.get(qNum);
+    group.sort((a, b) => a.qSub - b.qSub);
+    out.push(group);
+  }
   return out;
 }
 
