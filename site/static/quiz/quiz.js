@@ -272,6 +272,7 @@ function renderCurrentQuestion() {
   els.resultText.textContent = "";
   els.resultText.classList.remove("ok", "ng");
   els.explainText.textContent = "";
+  clearSelectedAnswer();
   els.answerTrue.disabled = false;
   els.answerFalse.disabled = false;
 }
@@ -300,12 +301,27 @@ function submitAnswer(answer) {
     updateReviewByResult(state.currentItem.idx, ok, true);
   }
 
+  setSelectedAnswer(answer);
   els.answerTrue.disabled = true;
   els.answerFalse.disabled = true;
   els.resultArea.classList.remove("hidden");
   els.resultText.textContent = ok ? "正解です" : "不正解です";
   els.resultText.classList.add(ok ? "ok" : "ng");
   els.explainText.textContent = q.explain || "解説はありません。";
+}
+
+function setSelectedAnswer(answer) {
+  clearSelectedAnswer();
+  if (answer) {
+    els.answerTrue.classList.add("quiz-answer-selected");
+  } else {
+    els.answerFalse.classList.add("quiz-answer-selected");
+  }
+}
+
+function clearSelectedAnswer() {
+  els.answerTrue.classList.remove("quiz-answer-selected");
+  els.answerFalse.classList.remove("quiz-answer-selected");
 }
 
 function nextQuestion() {
